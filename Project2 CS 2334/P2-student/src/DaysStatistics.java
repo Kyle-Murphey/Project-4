@@ -102,25 +102,13 @@ public class DaysStatistics extends StatisticsAbstract
     }
 
     /**
-     * assign stats to the StatMeasurements and populating lists
+     * assign stats to the StatMeasurements and populate maps
      * @param dataStats stats from the day
      * @throws ParseException invalid value
      */
     private void assignStats(DayDataStatistics dataStats) throws ParseException
     {
-        
-        tairMinList.add(dataStats.getTairMin());
-        tairMaxList.add(dataStats.getTairMax());
-        tairAvgList.add(dataStats.getTairAverage());
-        
-        ta9mMinList.add(dataStats.getTa9mMin());
-        ta9mMaxList.add(dataStats.getTa9mMax());
-        ta9mAvgList.add(dataStats.getTa9mAverage());
-        
-        sradMinList.add(dataStats.getSolarRadiationMin());
-        sradMaxList.add(dataStats.getSolarRadiationMax());
-        sradAvgList.add(dataStats.getSolarRadiationAverage());
-        sradTotList.add(dataStats.getSolarRadiationTotal());
+        addToLists(dataStats);
 
         tairEnums.put(StatType.MIN, tairMinList);
         tairEnums.put(StatType.MAX, tairMaxList);
@@ -140,6 +128,27 @@ public class DaysStatistics extends StatisticsAbstract
         paramStats.put(ParamType.SRAD.name(), sradEnums);
     }
 
+    /**
+     * populate lists
+     * @param dataStats object of data to pull extrema from
+     * @throws ParseException invalid value
+     */
+    private void addToLists(DayDataStatistics dataStats) throws ParseException
+    {
+        tairMinList.add(dataStats.getTairMin());
+        tairMaxList.add(dataStats.getTairMax());
+        tairAvgList.add(dataStats.getTairAverage());
+        
+        ta9mMinList.add(dataStats.getTa9mMin());
+        ta9mMaxList.add(dataStats.getTa9mMax());
+        ta9mAvgList.add(dataStats.getTa9mAverage());
+        
+        sradMinList.add(dataStats.getSolarRadiationMin());
+        sradMaxList.add(dataStats.getSolarRadiationMax());
+        sradAvgList.add(dataStats.getSolarRadiationAverage());
+        sradTotList.add(dataStats.getSolarRadiationTotal());
+    }
+    
     /**
      * get the date that the min occurred
      * @param inParamId tair,ta9m,srad

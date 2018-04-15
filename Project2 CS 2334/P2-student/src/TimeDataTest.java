@@ -72,7 +72,7 @@ public class TimeDataTest
                 new Measurement(5.0), new Measurement(6.0));
         
         GregorianCalendar g = new GregorianCalendar();
-        g.setTime(new GregorianCalendar(2018, 10, 8, 0 ,15).getTime());
+        g.setTime(new GregorianCalendar(2018, 10, 8, 0, 15).getTime());
         
         SimpleDateFormat dateFormat = new SimpleDateFormat(CsAbstractFile.dateTimeFormat);
         dateFormat.setCalendar(g);
@@ -139,35 +139,41 @@ public class TimeDataTest
 
     /**
      * Testing the ta9m
+     * @throws WrongParameterIdException wrong param
      */
     @Test
-    public void testGetTa9m()
+    public void testGetTa9m() throws WrongParameterIdException
     {
         TimeData t = new TimeData("NRMN", 2018, 10, 8, 15, new Measurement(4.0), 
                 new Measurement(5.0), new Measurement(6.0));
         Assert.assertEquals(5.0, t.getTa9m().getValue(), 0.01);
+        Assert.assertEquals(5.0, t.getMeasurement(ParamType.TA9M).getValue(), 0.01);
     }
 
     /**
      * Testing the srad
+     * @throws WrongParameterIdException wrong param
      */
     @Test
-    public void testGetSolarRadiation()
+    public void testGetSolarRadiation() throws WrongParameterIdException
     {
         TimeData t = new TimeData("NRMN", 2018, 10, 8, 15, new Measurement(4.0), 
                 new Measurement(5.0), new Measurement(6.0));
         Assert.assertEquals(6.0, t.getSolarRadiation().getValue(), 0.01);
+        Assert.assertEquals(6.0, t.getMeasurement(ParamType.SRAD).getValue(), 0.01);
     }
 
     /**
      * Testing the tair
+     * @throws WrongParameterIdException wrong param
      */
     @Test
-    public void testGetTair()
+    public void testGetTair() throws WrongParameterIdException
     {
         TimeData t = new TimeData("NRMN", 2018, 10, 8, 15, new Measurement(4.0), 
                 new Measurement(5.0), new Measurement(6.0));
         Assert.assertEquals(4.0, t.getTair().getValue(), 0.01);
+        Assert.assertEquals(4.0, t.getMeasurement(ParamType.TAIR).getValue(), 0.01);
     }
 
 }

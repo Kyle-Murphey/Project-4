@@ -15,7 +15,7 @@ public class WrongCopyrightException extends Exception
     /**
      * wrong copyright
      */
-	public WrongCopyrightException()
+    public WrongCopyrightException()
     {
         super("Invalid copyright detected");
     }

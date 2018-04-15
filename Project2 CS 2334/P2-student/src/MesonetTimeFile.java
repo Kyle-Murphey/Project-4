@@ -15,8 +15,10 @@ public class MesonetTimeFile extends CsFile
 {
     /** ArrayList of TimeData **/
     private ArrayList<TimeData> data;
+    
     /** ArrayList of Strings of params **/
     private ArrayList<String> paramIds;
+   
     /** date object **/
     private HeaderDateTime headerDateTime;
 

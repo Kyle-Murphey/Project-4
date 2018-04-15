@@ -25,8 +25,12 @@ public class DaysStatisticsTest
     @Test
     public void dayStatTest() throws IOException, WrongCopyrightException, ParseException, WrongParameterIdException
     {
-        String[] files = { "P2-student/data/mesonet/20180102stil.mts", 
-                "P2-student/data//mesonet//20180102okcn.mts", "P2-student/data/mesonet/20180102okce.mts"};
+        String[] files = new String[3];
+        files[0] = "P2-student/data/mesonet/20180102stil.mts";
+        files[1] = "P2-student/data//mesonet//20180102okcn.mts";
+        files[2] = "P2-student/data/mesonet/20180102okce.mts";
+        //String[] files = {"P2-student/data/mesonet/20180102stil.mts", 
+          //      "P2-student/data//mesonet//20180102okcn.mts", "P2-student/data/mesonet/20180102okce.mts"};
         DaysStatistics d = new DaysStatistics(files);
         
         d.findStatistics();
