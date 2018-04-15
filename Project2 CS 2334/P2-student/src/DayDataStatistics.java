@@ -1,7 +1,11 @@
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.EnumMap;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
 import java.util.TimeZone;
 
 /**
@@ -14,287 +18,147 @@ public class DayDataStatistics
 {
     /** The set of data. */
     private ArrayList<TimeData> data;
-
-    /** Minimum tair across day. */
-    private StatMeasurement tairMin;
-    /** Maximum tair across day. */
-    private StatMeasurement tairMax;
-    /** Average tair across the days. */
-    private StatMeasurement tairAverage;
     
-    /** Minimum ta9m across day. */
-    private StatMeasurement ta9mMin;
-    /** Maximum ta9m across day. */
-    private StatMeasurement ta9mMax;
-    /** Average ta9m across day. */
-    private StatMeasurement ta9mAverage;
-
-    /** Minimum solar radiation across day. */
-    private StatMeasurement solarRadiationMin;
-    /** Maximum solar radiation across day. */
-    private StatMeasurement solarRadiationMax;
-    /** Average solar radiation. */
-    private StatMeasurement solarRadiationAverage;
-
-    /** Total solarRadiation */
-    private StatMeasurement solarRadiationTotal;
+    /** Map of various StatMeasurements and extrema **/
+    private HashMap<ParamType, EnumMap<StatType, StatMeasurement>> paramStats;
 
     /** Station Id **/
     private String stationId = "nada";
+    
 
     /**
      * ctor
      * @param inData list of time date to find stats
+     * @throws WrongParameterIdException wrong parameter
      */
-    public DayDataStatistics(ArrayList<TimeData> inData)
+    public DayDataStatistics(ArrayList<TimeData> inData) throws WrongParameterIdException
     {
         data = inData;
         stationId = data.get(0).getStationID();
-
-        calculateAirTemperatureStatistics("tair");
-        calculateAirTemperatureStatistics("ta9m");
-        calculateSolarRadiationStatistics();
-    }
-
-    /**
-     * calc tair stats
-     * @param tairName tair
-     */
-    private void calculateAirTemperatureStatistics(String tairName)
-    {
-        // These variables represent the "best so far" for min and max.
-        // By setting these these to the largest and smallest possible
-        // values, we ensure that the first time a valid Measurement is
-        // found, it will replace these values
-
-        // Accumulator and counter for computing average
-        double sum = 0;
-        int numberOfValidObservations = 0;
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat(CsAbstractFile.dateTimeFormat);
         
-        // min calendar placeholder
-        GregorianCalendar minCalendar = new GregorianCalendar();
-        minCalendar.setTimeZone(TimeZone.getTimeZone("UTC"));
-        dateFormat.setCalendar(minCalendar);
-        dateFormat.format(minCalendar.getTime());
+        paramStats = new HashMap<ParamType, EnumMap<StatType, StatMeasurement>>();
         
-        // max calendar placeholder
-        GregorianCalendar maxCalendar = new GregorianCalendar();
-        maxCalendar.setTimeZone(TimeZone.getTimeZone("UTC"));
-        dateFormat.setCalendar(maxCalendar);
-        dateFormat.format(maxCalendar.getTime());
-        
-        int numberOfMeasurements = data.size();
-        double avg = 0;
-        double min = 9999.9;
-        double max = -9999.9;
-        
-        // finding tair stats
-        if (tairName.equals("tair"))
-        { 
-            numberOfValidObservations = 0;
-            sum = 0;
-            int maxIndex = 0;
-            int minIndex = 0;
-            // looping through the array of TimeData
-            for (int index = 0; index < numberOfMeasurements; ++index)
-            {
-                // checking validity
-                if (data.get(index).getTair().isValid())
-                {
-                    // incrementing observations and adding values to the sum
-                    ++numberOfValidObservations;
-                    sum += data.get(index).getTair().getValue();
-                    
-                    // checking if value is less than the minimum
-                    if (data.get(index).getTair().getValue() < min)
-                    {
-                        min = data.get(index).getTair().getValue();
-                        minCalendar = data.get(index).getMeasurementDateTime();
-                        minIndex = index;
-                    }
-                    
-                    // checking if value is greater than the maximum
-                    if (data.get(index).getTair().getValue() > max)
-                    {
-                        max = data.get(index).getTair().getValue();
-                        maxCalendar = data.get(index).getMeasurementDateTime();
-                        maxIndex = index;
-                    }
-                }
-                else
-                {
-                    min = Double.NaN;
-                    max = Double.NaN;
-                }
-            }
-            // finding average
-            avg = sum / numberOfValidObservations;
-            
-            maxCalendar.set(Calendar.SECOND, 0);
-            minCalendar.set(Calendar.SECOND, 0);
-            
-            // creating tair average StatMeasurement object
-            tairAverage = new StatMeasurement(avg, maxCalendar, 
-                    data.get(0).getStationID(), "TAIR", StatType.AVG);
-            
-            // creating tair max StatMeasurement object
-            tairMax = new StatMeasurement(max, maxCalendar, data.get(maxIndex).getStationID(), "TAIR", StatType.MAX);
-            
-            // creating  tair min StatMeasurement object
-            tairMin = new StatMeasurement(min, minCalendar, data.get(minIndex).getStationID(), "TAIR", StatType.MIN);
-        }
-        // finding ta9m
-        else
-        {
-            numberOfValidObservations = 0;
-            sum = 0;
-            int maxIndex = 0;
-            int minIndex = 0;
-            for (int index = 0; index < numberOfMeasurements; ++index)
-            {
-                // checking if valid
-                if (data.get(index).getTa9m().isValid())
-                {
-                    ++numberOfValidObservations;
-                    sum += data.get(index).getTa9m().getValue();
-                    
-                    // checking if value is less than the minimum
-                    if (data.get(index).getTa9m().getValue() < min)
-                    {
-                        min = data.get(index).getTa9m().getValue();
-                        minCalendar = data.get(index).getMeasurementDateTime();
-                        minIndex = index;
-                    }
-                    
-                    // checking if value is greater than the maximum
-                    if (data.get(index).getTa9m().getValue() > max)
-                    {
-                        max = data.get(index).getTa9m().getValue();
-                        maxCalendar = data.get(index).getMeasurementDateTime();
-                        maxIndex = index;
-                    }
-                }
-                else
-                {
-                    min = Double.NaN;
-                    max = Double.NaN;
-                }
-            }
-            // finding average
-            avg = sum / numberOfValidObservations;
-            
-            maxCalendar.set(Calendar.SECOND, 0);
-            minCalendar.set(Calendar.SECOND, 0);
-            
-            // creating tair average StatMeasurement object
-            ta9mAverage = new StatMeasurement(avg, maxCalendar, 
-                    data.get(0).getStationID(), "TA9M", StatType.AVG);
-            
-            // creating tair max StatMeasurement object
-            ta9mMax = new StatMeasurement(max, maxCalendar, data.get(maxIndex).getStationID(), "TA9M", StatType.MAX);
-            
-            // creating  tair min StatMeasurement object
-            ta9mMin = new StatMeasurement(min, minCalendar, data.get(minIndex).getStationID(), "TA9m", StatType.MIN);
-        }
-    }
-
-    /**
-     * Compute and fill in the solar radiation-related statistics
-     * (solarRadiationMin, solarRadiationMax, solarRadiationAverage, and
-     * solarRadiationTotal).
-     * <P>
-     * Notes:
-     * <UL>
-     * <LI>Only valid Measurements can be used in these computations
-     * <LI>You may assume that every month has at least one valid Measurement
-     * </UL>
-     */
-    private void calculateSolarRadiationStatistics()
-    {
-        double sum = 0;
-        int numberOfValidObservations = 0;
-        
-        int numberOfMeasurements = data.size();
-        double avg = 0;
-        double min = 9999.9;
-        double max = -9999.9;
-        
-        SimpleDateFormat dateFormat = new SimpleDateFormat(CsAbstractFile.dateTimeFormat);
-        
-        GregorianCalendar minCalendar = new GregorianCalendar();
-        minCalendar.setTimeZone(TimeZone.getTimeZone("UTC"));
-        dateFormat.setCalendar(minCalendar);
-        dateFormat.format(minCalendar.getTime());
-        
-        GregorianCalendar maxCalendar = new GregorianCalendar();
-        maxCalendar.setTimeZone(TimeZone.getTimeZone("UTC"));
-        dateFormat.setCalendar(maxCalendar);
-        dateFormat.format(maxCalendar.getTime());
-        
-        
-        int maxIndex = 0;
-        int minIndex = 0;
-        
-        for (int index = 0; index < numberOfMeasurements; ++index)
-        {
-            if (data.get(index).getSolarRadiation().isValid())
-            {
-                ++numberOfValidObservations;
-                sum += data.get(index).getSolarRadiation().getValue();
-                // checking if value is less than the minimum
-                if (data.get(index).getSolarRadiation().getValue() < min)
-                {
-                    min = data.get(index).getSolarRadiation().getValue();
-                    minCalendar = data.get(index).getMeasurementDateTime();
-                    minIndex = index;
-                }
-                
-                // checking if value is greater than the maximum
-                if (data.get(index).getSolarRadiation().getValue() > max)
-                { 
-                    max = data.get(index).getSolarRadiation().getValue();
-                    maxCalendar = data.get(index).getMeasurementDateTime();
-                    maxIndex = index;
-                }
-            }
-            else
-            {
-                min = Double.NaN;
-                max = Double.NaN;
-            }
-            
-        }
-        // finding average
-        avg = sum / numberOfValidObservations;
-        
-        maxCalendar.set(Calendar.SECOND, 0);
-        minCalendar.set(Calendar.SECOND, 0);
-       
-        // creating srad average StatMeasurement object
-        solarRadiationAverage = new StatMeasurement(avg, maxCalendar, data.get(0).getStationID(), 
-                "SRAD", StatType.AVG);
-        
-        // creating srad max StatMeasurement object
-        solarRadiationMax = new StatMeasurement(max, maxCalendar, data.get(maxIndex).getStationID(),
-                "SRAD", StatType.MAX);        
-        // creating  srad min StatMeasurement object
-        solarRadiationMin = new StatMeasurement(min, minCalendar, data.get(minIndex).getStationID(), 
-                "SRAD", StatType.MIN);
-       
-        // creating srad total StatMeasurement object
-        solarRadiationTotal = new StatMeasurement(sum, maxCalendar, data.get(0).getStationID(), 
-                "SRAD", StatType.TOT);
+        calculateStatistics(ParamType.TAIR);
+        calculateStatistics(ParamType.TA9M);
+        calculateStatistics(ParamType.SRAD);
     }
     
+    /**
+     * calculate the statistics for the requested parameter
+     * @param parameter PameterType TAIR, TA9M, SRAD
+     * @throws WrongParameterIdException wrong parameter
+     */
+    private void calculateStatistics(ParamType parameter) throws WrongParameterIdException
+    {
+        // list to hold valid values and find extrema
+        List<Double> list = new ArrayList<Double>();
+        // EnumMap to hold type and stats
+        EnumMap<StatType, StatMeasurement> enums = new EnumMap<StatType, StatMeasurement>(StatType.class);
+        
+        int numberOfMeasurements = data.size(); //number of values
+        int numberOfValidObservations = 0; //number valid values
+        int sum = 0; //sum of valid values
+        int maxIndex = 0; //location of max val
+        int minIndex = 0; //location of min val
+        double minVal = 9999.9; //value of min
+        double maxVal = -9999.9; //value of max
+        
+        GregorianCalendar maxCal = new GregorianCalendar(); //datetime of max
+        GregorianCalendar minCal = new GregorianCalendar(); //datetime of min
+        maxCal = formatCalendar(maxCal);
+        minCal = formatCalendar(minCal);
+        
+        // loop through values in file
+        for (int index = 0; index < numberOfMeasurements; ++index)
+        {
+            double value = data.get(index).getMeasurement(parameter).getValue();
+            
+            // check validity
+            if (data.get(index).getMeasurement(parameter).isValid())
+            {
+                list.add(value);
+                sum += value;
+                ++numberOfValidObservations;
+                
+                // finding max
+                if (Collections.max(list) > maxVal)
+                {
+                    maxIndex = index;
+                    maxVal = Collections.max(list);
+                    maxCal = data.get(index).getMeasurementDateTime();
+                }
+                
+                // finding min
+                if (Collections.min(list) < minVal)
+                {
+                    minIndex = index;
+                    minVal = Collections.min(list);
+                    minCal = data.get(index).getMeasurementDateTime();
+                }
+            }
+            
+            // invalid measurement
+            else
+            {
+                value = Double.NaN;
+                list.add(value);
+            }
+        }
+        
+        double max = Collections.max(list);
+        double min = Collections.min(list);
+        double avg;
+        
+        // making sure we don't divide by zero
+        if (numberOfValidObservations < 1)
+        {
+            avg = Double.NaN;
+        }
+        else
+        {
+            avg = sum / numberOfValidObservations;
+        }
+        
+        // reseting seconds due to runtime(?)
+        maxCal.set(Calendar.SECOND, 0);
+        minCal.set(Calendar.SECOND, 0);
+        
+        // putting the type and stat measurement into the EnumMap
+        enums.put(StatType.MAX, new StatMeasurement(max, maxCal, data.get(maxIndex).getStationID(),
+                parameter.name(), StatType.MAX));
+        enums.put(StatType.MIN, new StatMeasurement(min, minCal, data.get(minIndex).getStationID(),
+                parameter.name(), StatType.MIN));
+        enums.put(StatType.AVG, new StatMeasurement(avg, maxCal, data.get(0).getStationID(),
+                parameter.name(), StatType.AVG));
+        enums.put(StatType.TOT, new StatMeasurement(sum, maxCal, data.get(0).getStationID(),
+                parameter.name(), StatType.TOT));
+        
+        // putting the StatMeasurement into the HashMap
+        paramStats.put(parameter, enums);
+        
+    }
+    
+    /**
+     * return a formated calendar in UTC
+     * @param cal calendar for formatting
+     * @return formatted calendar
+     */
+    private GregorianCalendar formatCalendar(GregorianCalendar cal)
+    {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(CsAbstractFile.dateTimeFormat);
+        cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+        dateFormat.setCalendar(cal);
+        dateFormat.format(cal.getTime());
+        
+        return cal;
+    }
 
     /**
      * @return average of solar radiation
      */
     public StatMeasurement getSolarRadiationAverage()
     {
-        return solarRadiationAverage;
+        return paramStats.get(ParamType.SRAD).get(StatType.AVG);
     }
 
     /**
@@ -302,7 +166,7 @@ public class DayDataStatistics
      */
     public StatMeasurement getSolarRadiationMax()
     {
-        return solarRadiationMax;
+        return paramStats.get(ParamType.SRAD).get(StatType.MAX);
     }
 
     /**
@@ -310,7 +174,7 @@ public class DayDataStatistics
      */
     public StatMeasurement getSolarRadiationMin()
     {
-        return solarRadiationMin;
+        return paramStats.get(ParamType.SRAD).get(StatType.MIN);
     }
 
     /**
@@ -318,7 +182,7 @@ public class DayDataStatistics
      */
     public StatMeasurement getSolarRadiationTotal()
     {
-        return solarRadiationTotal;
+        return paramStats.get(ParamType.SRAD).get(StatType.TOT);
     }
 
     /**
@@ -334,7 +198,7 @@ public class DayDataStatistics
      */
     public StatMeasurement getTa9mAverage()
     {
-        return ta9mAverage;
+        return paramStats.get(ParamType.TA9M).get(StatType.AVG);
     }
 
     /**
@@ -342,7 +206,7 @@ public class DayDataStatistics
      */
     public StatMeasurement getTa9mMax()
     {
-        return ta9mMax;
+        return paramStats.get(ParamType.TA9M).get(StatType.MAX);
     }
 
     /**
@@ -350,7 +214,7 @@ public class DayDataStatistics
      */
     public StatMeasurement getTa9mMin()
     {
-        return ta9mMin;
+        return paramStats.get(ParamType.TA9M).get(StatType.MIN);
     }
 
     /**
@@ -358,7 +222,7 @@ public class DayDataStatistics
      */
     public StatMeasurement getTairAverage()
     {
-        return tairAverage;
+        return paramStats.get(ParamType.TAIR).get(StatType.AVG);
     }
 
     /**
@@ -366,7 +230,7 @@ public class DayDataStatistics
      */
     public StatMeasurement getTairMax()
     {
-        return tairMax;
+        return paramStats.get(ParamType.TAIR).get(StatType.MAX);
     }
 
     /**
@@ -374,7 +238,7 @@ public class DayDataStatistics
      */
     public StatMeasurement getTairMin()
     {
-        return tairMin;
+        return paramStats.get(ParamType.TAIR).get(StatType.MIN);
     }
 
 

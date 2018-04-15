@@ -18,9 +18,10 @@ public class DayDataStatisticsTest
     /**
      * Testing the rest of DaydataStatistics
      * @throws WrongTimeZoneException wrong tz
+     * @throws WrongParameterIdException wrong parameter
      */
     @Test
-    public void notValidTest() throws WrongTimeZoneException
+    public void notValidTest() throws WrongTimeZoneException, WrongParameterIdException
     {
         GregorianCalendar g = new GregorianCalendar();
         g.setTimeZone(TimeZone.getTimeZone("UTC"));

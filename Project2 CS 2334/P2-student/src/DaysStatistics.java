@@ -55,8 +55,9 @@ public class DaysStatistics extends StatisticsAbstract
      * @throws IOException no file
      * @throws WrongCopyrightException bad copyright
      * @throws ParseException can't parse 
+     * @throws WrongParameterIdException wrong parameter
      */
-    public void findStatistics() throws IOException, WrongCopyrightException, ParseException
+    public void findStatistics() throws IOException, WrongCopyrightException, ParseException, WrongParameterIdException
     {
         for (String fileName : files)
         {

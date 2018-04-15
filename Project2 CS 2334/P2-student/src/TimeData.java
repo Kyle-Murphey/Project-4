@@ -190,4 +190,30 @@ public class TimeData
     {
         return tair;
     }
+    
+    /**
+     * return the requested Measurement
+     * @param param requested Measurement ("TAIR", "TA9M", "SRAD")
+     * @throws WrongParameterIdException wrong parameter
+     * @return requested Measurement
+     */
+    public Measurement getMeasurement(ParamType param) throws WrongParameterIdException
+    {
+        if (param.equals(ParamType.TAIR))
+        {
+            return tair;
+        }
+        else if (param.equals(ParamType.TA9M))
+        {
+            return ta9m;
+        }
+        else if (param.equals(ParamType.SRAD))
+        {
+            return solarRadiation;
+        }
+        else
+        {
+            throw new WrongParameterIdException();
+        }
+    }
 }

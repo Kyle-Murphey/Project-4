@@ -34,7 +34,7 @@ public class DaysStatisticsTest
                 d.getMaximumDay("TAIR").toString());
         Assert.assertEquals("TAIR MIN -13.3000 OKCE 2018-01-02T08:05:00 UTC\n", d.getMinimumDay("TAIR").toString());
         Assert.assertEquals("TA9M MAX -6.4000 OKCE 2018-01-02T22:20:00 UTC\n", d.getMaximumDay("TA9M").toString());
-        Assert.assertEquals("TA9m MIN -12.4000 OKCE 2018-01-02T08:20:00 UTC\n", d.getMinimumDay("TA9M").toString());
+        Assert.assertEquals("TA9M MIN -12.4000 OKCE 2018-01-02T08:20:00 UTC\n", d.getMinimumDay("TA9M").toString());
         Assert.assertEquals("SRAD MIN 0.0000 OKCE 2018-01-02T00:00:00 UTC\n", d.getMinimumDay("SRAD").toString());
         Assert.assertEquals("SRAD MAX 254.0000 OKCE 2018-01-02T18:55:00 UTC\n", d.getMaximumDay("SRAD").toString());
         
@@ -55,9 +55,9 @@ public class DaysStatisticsTest
                 ", TA9M MAX -6.6000 OKCN 2018-01-02T21:05:00 UTC\n" + 
                 ", TA9M MAX -6.4000 OKCE 2018-01-02T22:20:00 UTC\n" + 
                 "]\n" + 
-                "[TA9m MIN -11.3000 STIL 2018-01-02T08:20:00 UTC\n" + 
-                ", TA9m MIN -12.1000 OKCN 2018-01-02T06:25:00 UTC\n" + 
-                ", TA9m MIN -12.4000 OKCE 2018-01-02T08:20:00 UTC\n" + 
+                "[TA9M MIN -11.3000 STIL 2018-01-02T08:20:00 UTC\n" + 
+                ", TA9M MIN -12.1000 OKCN 2018-01-02T06:25:00 UTC\n" + 
+                ", TA9M MIN -12.4000 OKCE 2018-01-02T08:20:00 UTC\n" + 
                 "]\n" + 
                 "[SRAD MIN 0.0000 STIL 2018-01-02T00:00:00 UTC\n" + 
                 ", SRAD MIN 0.0000 OKCN 2018-01-02T00:00:00 UTC\n" + 
