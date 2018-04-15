@@ -19,7 +19,7 @@ public class DayDataStatistics
     /** The set of data. */
     private ArrayList<TimeData> data;
     
-    /** Map of various StatMeasurements and extrema **/
+    /** Map of various StatMeasurements and their extrema **/
     private HashMap<ParamType, EnumMap<StatType, StatMeasurement>> paramStats;
 
     /** Station Id **/
@@ -65,6 +65,8 @@ public class DayDataStatistics
         
         GregorianCalendar maxCal = new GregorianCalendar(); //datetime of max
         GregorianCalendar minCal = new GregorianCalendar(); //datetime of min
+        
+        // formatting the calendars to UTC
         maxCal = formatCalendar(maxCal);
         minCal = formatCalendar(minCal);
         
@@ -87,7 +89,6 @@ public class DayDataStatistics
                     maxVal = Collections.max(list);
                     maxCal = data.get(index).getMeasurementDateTime();
                 }
-                
                 // finding min
                 if (Collections.min(list) < minVal)
                 {
@@ -96,7 +97,6 @@ public class DayDataStatistics
                     minCal = data.get(index).getMeasurementDateTime();
                 }
             }
-            
             // invalid measurement
             else
             {
@@ -104,9 +104,8 @@ public class DayDataStatistics
                 list.add(value);
             }
         }
-        
-        double max = Collections.max(list);
-        double min = Collections.min(list);
+        maxVal = Collections.max(list);
+        minVal = Collections.min(list);
         double avg;
         
         // making sure we don't divide by zero
@@ -118,15 +117,14 @@ public class DayDataStatistics
         {
             avg = sum / numberOfValidObservations;
         }
-        
         // reseting seconds due to runtime(?)
         maxCal.set(Calendar.SECOND, 0);
         minCal.set(Calendar.SECOND, 0);
         
         // putting the type and stat measurement into the EnumMap
-        enums.put(StatType.MAX, new StatMeasurement(max, maxCal, data.get(maxIndex).getStationID(),
+        enums.put(StatType.MAX, new StatMeasurement(maxVal, maxCal, data.get(maxIndex).getStationID(),
                 parameter.name(), StatType.MAX));
-        enums.put(StatType.MIN, new StatMeasurement(min, minCal, data.get(minIndex).getStationID(),
+        enums.put(StatType.MIN, new StatMeasurement(minVal, minCal, data.get(minIndex).getStationID(),
                 parameter.name(), StatType.MIN));
         enums.put(StatType.AVG, new StatMeasurement(avg, maxCal, data.get(0).getStationID(),
                 parameter.name(), StatType.AVG));
@@ -135,7 +133,6 @@ public class DayDataStatistics
         
         // putting the StatMeasurement into the HashMap
         paramStats.put(parameter, enums);
-        
     }
     
     /**
