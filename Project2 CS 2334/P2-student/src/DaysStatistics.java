@@ -28,6 +28,8 @@ public class DaysStatistics extends StatisticsAbstract
     private EnumMap<StatType, ArrayList<StatMeasurement>> ta9mEnums;
     /** enum map that holds all srad extrema **/
     private EnumMap<StatType, ArrayList<StatMeasurement>> sradEnums;
+    /** enum map that holds all the wspd extrema **/
+    private EnumMap<StatType, ArrayList<StatMeasurement>> wspdEnums;
     /** list of all tair minimums **/
     private ArrayList<StatMeasurement> tairMinList;
     /** list of all tair maximums **/
@@ -48,6 +50,10 @@ public class DaysStatistics extends StatisticsAbstract
     private ArrayList<StatMeasurement> sradAvgList;
     /** list of all srad totals **/
     private ArrayList<StatMeasurement> sradTotList;
+    /** list of all wspd max list **/
+    private ArrayList<StatMeasurement> wspdMaxList;
+    /** list of all wspd min list **/
+    private ArrayList<StatMeasurement> wspdMinList;
 
     /**
      * ctor
@@ -68,6 +74,7 @@ public class DaysStatistics extends StatisticsAbstract
         tairEnums = new EnumMap<StatType, ArrayList<StatMeasurement>>(StatType.class);
         ta9mEnums = new EnumMap<StatType, ArrayList<StatMeasurement>>(StatType.class);
         sradEnums = new EnumMap<StatType, ArrayList<StatMeasurement>>(StatType.class);
+        wspdEnums = new EnumMap<StatType, ArrayList<StatMeasurement>>(StatType.class);
         
         tairMinList = new ArrayList<StatMeasurement>();
         tairMaxList = new ArrayList<StatMeasurement>();
@@ -79,6 +86,8 @@ public class DaysStatistics extends StatisticsAbstract
         sradMaxList = new ArrayList<StatMeasurement>();
         sradAvgList = new ArrayList<StatMeasurement>();
         sradTotList = new ArrayList<StatMeasurement>();
+        wspdMaxList = new ArrayList<StatMeasurement>();
+        wspdMinList = new ArrayList<StatMeasurement>();
     }
 
     /**
@@ -123,9 +132,13 @@ public class DaysStatistics extends StatisticsAbstract
         sradEnums.put(StatType.AVG, sradAvgList);
         sradEnums.put(StatType.TOT, sradTotList);
         
+        wspdEnums.put(StatType.MAX, wspdMaxList);
+        wspdEnums.put(StatType.MIN, wspdMinList);
+        
         paramStats.put(ParamType.TAIR.name(), tairEnums);
         paramStats.put(ParamType.TA9M.name(), ta9mEnums);
         paramStats.put(ParamType.SRAD.name(), sradEnums);
+        paramStats.put(ParamType.WSPD.name(), wspdEnums);
     }
 
     /**
@@ -147,6 +160,9 @@ public class DaysStatistics extends StatisticsAbstract
         sradMaxList.add(dataStats.getSolarRadiationMax());
         sradAvgList.add(dataStats.getSolarRadiationAverage());
         sradTotList.add(dataStats.getSolarRadiationTotal());
+        
+        wspdMaxList.add(dataStats.getWindSpeedMax());
+        wspdMinList.add(dataStats.getWindSpeedMin());
     }
     
     /**
@@ -233,6 +249,44 @@ public class DaysStatistics extends StatisticsAbstract
         return maximumDay.toString() + "\n" + miniumuDay.toString() + "\n";
     }
     
+    /***
+     * get the max
+     * @param param param type
+     * @return max
+     */
+    public String getMax(String param)
+    {
+        StatMeasurement s = paramStats.get(param).get(StatType.MAX).get(0);
+        for (int i = 1; i < paramStats.get(param).get(StatType.MAX).size() - 1; ++i)
+        {
+            if (s.isGreaterThan(paramStats.get(param).get(StatType.MAX).get(i)))
+            {
+                s = paramStats.get(param).get(StatType.MAX).get(i);
+            }
+        }
+        
+        return s.toString();
+    }
+    
+    /***
+     * get the min
+     * @param param param type
+     * @return min
+     */
+    public String getMin(String param)
+    {
+        StatMeasurement s = paramStats.get(param).get(StatType.MIN).get(0);
+        for (int i = 1; i < paramStats.get(param).get(StatType.MIN).size() - 1; ++i)
+        {
+            if (s.isGreaterThan(paramStats.get(param).get(StatType.MIN).get(i)))
+            {
+                s = paramStats.get(param).get(StatType.MIN).get(i);
+            }
+        }
+        
+        return s.toString();
+    }
+    
     /**
      * get the stats in output
      * @return string of stats
@@ -242,13 +296,15 @@ public class DaysStatistics extends StatisticsAbstract
     {
         return String.format("   ID  STAT      VALUE  STID       DATE T TIME     TZ\n"
                 + "-----------------------------------------------------\n"
-                + "%s\n%s\n%s\n%s\n%s\n%s",
+                + "%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s",
                 paramStats.get(ParamType.TAIR.name()).get(StatType.MAX).toString(), 
                 paramStats.get(ParamType.TAIR.name()).get(StatType.MIN).toString(), 
                 paramStats.get(ParamType.TA9M.name()).get(StatType.MAX).toString(),
                 paramStats.get(ParamType.TA9M.name()).get(StatType.MIN).toString(), 
                 paramStats.get(ParamType.SRAD.name()).get(StatType.MIN).toString(), 
-                paramStats.get(ParamType.SRAD.name()).get(StatType.MAX).toString());
+                paramStats.get(ParamType.SRAD.name()).get(StatType.MAX).toString(),
+                paramStats.get(ParamType.WSPD.name()).get(StatType.MIN).toString(),
+                paramStats.get(ParamType.WSPD.name()).get(StatType.MAX).toString());
     }
 
 }

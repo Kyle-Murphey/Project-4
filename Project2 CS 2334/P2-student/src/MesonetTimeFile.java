@@ -47,7 +47,9 @@ public class MesonetTimeFile extends CsFile
     private static final String TIME = "TIME";
     /** station id **/
     private static final String STID = "STID";
-
+    /** wind speed **/
+    private static final String WSPD = "WSPD";
+    
     /** index of tair **/
     private int tairPosition = -1;
     /** index of ta9m **/
@@ -58,6 +60,8 @@ public class MesonetTimeFile extends CsFile
     private int minutePosition = -1;
     /** index of station id **/
     private int stidPosition = -1;
+    /** index of wspd **/
+    private int wspdPosition = -1;
 
     /** calendar for date **/
     private GregorianCalendar dateTime;
@@ -191,7 +195,8 @@ public class MesonetTimeFile extends CsFile
                 headerDateTime.month, headerDateTime.day, Integer.parseInt(input[minutePosition]),
                 new Measurement(Double.parseDouble(input[tairPosition])),
                 new Measurement(Double.parseDouble(input[ta9mPosition])),
-                new Measurement(Double.parseDouble(input[sradPosition])));
+                new Measurement(Double.parseDouble(input[sradPosition])),
+                new Measurement(Double.parseDouble(input[wspdPosition])));
         data.add(values);
     }
 
@@ -207,6 +212,7 @@ public class MesonetTimeFile extends CsFile
         paramIds.add(SRAD);
         paramIds.add(TIME);
         paramIds.add(STID);
+        paramIds.add(WSPD);
         
         // parsing the parameter
         String[] input = parseLine(inParamStr);
@@ -231,6 +237,8 @@ public class MesonetTimeFile extends CsFile
                 case TIME:
                     minutePosition = index;
                     break;
+                case WSPD:
+                    wspdPosition = index;
                 default:
                     break;
             }

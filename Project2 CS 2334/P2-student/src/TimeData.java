@@ -28,6 +28,8 @@ public class TimeData
     private Measurement ta9m;
     /** srad **/
     private Measurement solarRadiation;
+    /** wspd **/
+    private Measurement wspd;
     /**
      * ctor
      * @param stationID station id
@@ -38,13 +40,14 @@ public class TimeData
      * @param tair tair
      * @param ta9m ta9m
      * @param solarRadiation srad
+     * @param wspd wind speed
      */
     public TimeData(String stationID, int year, int month, int day, int minute,
-            Measurement tair, Measurement ta9m, Measurement solarRadiation)
+            Measurement tair, Measurement ta9m, Measurement solarRadiation, Measurement wspd)
     {
         this.stationID = stationID;
         setDateTimeComponents(year, month, day, minute);
-        setMeasurements(tair, ta9m, solarRadiation);
+        setMeasurements(tair, ta9m, solarRadiation, wspd);
     }
     
     /**
@@ -54,10 +57,12 @@ public class TimeData
      * @param inTair tair
      * @param inTa9m ta9m
      * @param inSolarRadiation srad
+     * @param inWspd wind speed
      * @throws WrongTimeZoneException wrong tz
      */
     public TimeData(String inStationID, GregorianCalendar dateTime, 
-            Measurement inTair, Measurement inTa9m, Measurement inSolarRadiation) throws WrongTimeZoneException
+            Measurement inTair, Measurement inTa9m, Measurement inSolarRadiation,
+            Measurement inWspd) throws WrongTimeZoneException
     {
         if (dateTime.getTimeZone().getID().equals("UTC"))
         {
@@ -68,7 +73,7 @@ public class TimeData
             SimpleDateFormat dateFormat = new SimpleDateFormat(CsAbstractFile.dateTimeFormat);
             dateFormat.setCalendar(this.measurementDateTimeUTC);
             dateFormat.format(this.measurementDateTimeUTC.getTime());
-            setMeasurements(inTair, inTa9m, inSolarRadiation);
+            setMeasurements(inTair, inTa9m, inSolarRadiation, inWspd);
         }
         else
         {
@@ -111,12 +116,15 @@ public class TimeData
      * @param inTair tair 
      * @param inTa9m ta9m
      * @param inSolarRadiation srad
+     * @param inWspd wspd
      */
-    private void setMeasurements(Measurement inTair, Measurement inTa9m, Measurement inSolarRadiation)
+    private void setMeasurements(Measurement inTair, Measurement inTa9m, Measurement inSolarRadiation, 
+            Measurement inWspd)
     {
         this.tair = inTair;
         this.ta9m = inTa9m;
         this.solarRadiation = inSolarRadiation;
+        this.wspd = inWspd;
     }
     /**
      * get the minute
@@ -192,8 +200,17 @@ public class TimeData
     }
     
     /**
+     * get the wspd
+     * @return windpseed
+     */
+    public Measurement getWspd()
+    {
+        return wspd;
+    }
+    
+    /**
      * return the requested Measurement
-     * @param param requested Measurement ("TAIR", "TA9M", "SRAD")
+     * @param param requested Measurement ("TAIR", "TA9M", "SRAD", "WSPD")
      * @throws WrongParameterIdException wrong parameter
      * @return requested Measurement
      */
@@ -210,6 +227,10 @@ public class TimeData
         else if (param.equals(ParamType.SRAD))
         {
             return solarRadiation;
+        }
+        else if (param.equals(ParamType.WSPD))
+        {
+            return wspd;
         }
         else
         {

@@ -27,7 +27,7 @@ public class DayDataStatisticsTest
         g.setTimeZone(TimeZone.getTimeZone("UTC"));
         ArrayList<TimeData> d = new ArrayList<>();
         d.add(new TimeData("NRMN", g, new Measurement(-999.9), 
-                new Measurement(-999.9), new Measurement(-999.9)));
+                new Measurement(-999.9), new Measurement(-999.9), new Measurement(-999.9)));
         DayDataStatistics data = new DayDataStatistics(d);
         
         Assert.assertEquals("NRMN", data.getStationID());

@@ -23,7 +23,7 @@ public class TimeDataTest
     public void testTimeDataStringIntIntIntIntMeasurementMeasurementMeasurement()
     {
         TimeData t = new TimeData("NRMN", 2018, 10, 8, 15, new Measurement(4.0), 
-                new Measurement(5.0), new Measurement(6.0));
+                new Measurement(5.0), new Measurement(6.0), new Measurement(7.0));
         Assert.assertEquals("NRMN", t.getStationID());
         
     }
@@ -38,7 +38,7 @@ public class TimeDataTest
         try
         {
             TimeData t = new TimeData("NRMN", g, new Measurement(4.0), 
-                    new Measurement(5.0), new Measurement(6.0));
+                    new Measurement(5.0), new Measurement(6.0), new Measurement(7.0));
             t.getDay();
             Assert.fail();
         }
@@ -58,7 +58,7 @@ public class TimeDataTest
         GregorianCalendar g = new GregorianCalendar(2018, 10, 8);
         g.setTimeZone(TimeZone.getTimeZone("UTC"));
         TimeData t = new TimeData("NRMN", g, new Measurement(4.0), 
-                new Measurement(5.0), new Measurement(6.0));
+                new Measurement(5.0), new Measurement(6.0), new Measurement(7.0));
         Assert.assertEquals("NRMN", t.getStationID());
     }
 
@@ -69,7 +69,7 @@ public class TimeDataTest
     public void testGetMeasurementDateTime()
     {
         TimeData t = new TimeData("NRMN", 2018, 10, 8, 15, new Measurement(4.0), 
-                new Measurement(5.0), new Measurement(6.0));
+                new Measurement(5.0), new Measurement(6.0), new Measurement(7.0));
         
         GregorianCalendar g = new GregorianCalendar();
         g.setTime(new GregorianCalendar(2018, 10, 8, 0, 15).getTime());
@@ -89,7 +89,7 @@ public class TimeDataTest
     public void testGetMinute()
     {
         TimeData t = new TimeData("NRMN", 2018, 10, 8, 15, new Measurement(4.0), 
-                new Measurement(5.0), new Measurement(6.0));
+                new Measurement(5.0), new Measurement(6.0), new Measurement(7.0));
         Assert.assertEquals(15, t.getMinute());
     }
 
@@ -100,7 +100,7 @@ public class TimeDataTest
     public void testGetMonth()
     {
         TimeData t = new TimeData("NRMN", 2018, 10, 8, 15, new Measurement(4.0), 
-                new Measurement(5.0), new Measurement(6.0));
+                new Measurement(5.0), new Measurement(6.0), new Measurement(7.0));
         Assert.assertEquals(10, t.getMonth());
     }
 
@@ -111,7 +111,7 @@ public class TimeDataTest
     public void testGetDay()
     {
         TimeData t = new TimeData("NRMN", 2018, 10, 8, 15, new Measurement(4.0), 
-                new Measurement(5.0), new Measurement(6.0));
+                new Measurement(5.0), new Measurement(6.0), new Measurement(7.0));
         Assert.assertEquals(8, t.getDay());
     }
 
@@ -122,7 +122,7 @@ public class TimeDataTest
     public void testGetYear()
     {
         TimeData t = new TimeData("NRMN", 2018, 10, 8, 15, new Measurement(4.0), 
-                new Measurement(5.0), new Measurement(6.0));
+                new Measurement(5.0), new Measurement(6.0), new Measurement(7.0));
         Assert.assertEquals(2018, t.getYear());
     }
 
@@ -133,7 +133,7 @@ public class TimeDataTest
     public void testGetStationID()
     {
         TimeData t = new TimeData("NRMN", 2018, 10, 8, 15, new Measurement(4.0), 
-                new Measurement(5.0), new Measurement(6.0));
+                new Measurement(5.0), new Measurement(6.0), new Measurement(7.0));
         Assert.assertEquals("NRMN", t.getStationID());
     }
 
@@ -145,7 +145,7 @@ public class TimeDataTest
     public void testGetTa9m() throws WrongParameterIdException
     {
         TimeData t = new TimeData("NRMN", 2018, 10, 8, 15, new Measurement(4.0), 
-                new Measurement(5.0), new Measurement(6.0));
+                new Measurement(5.0), new Measurement(6.0), new Measurement(7.0));
         Assert.assertEquals(5.0, t.getTa9m().getValue(), 0.01);
         Assert.assertEquals(5.0, t.getMeasurement(ParamType.TA9M).getValue(), 0.01);
     }
@@ -158,7 +158,7 @@ public class TimeDataTest
     public void testGetSolarRadiation() throws WrongParameterIdException
     {
         TimeData t = new TimeData("NRMN", 2018, 10, 8, 15, new Measurement(4.0), 
-                new Measurement(5.0), new Measurement(6.0));
+                new Measurement(5.0), new Measurement(6.0), new Measurement(7.0));
         Assert.assertEquals(6.0, t.getSolarRadiation().getValue(), 0.01);
         Assert.assertEquals(6.0, t.getMeasurement(ParamType.SRAD).getValue(), 0.01);
     }
@@ -171,9 +171,22 @@ public class TimeDataTest
     public void testGetTair() throws WrongParameterIdException
     {
         TimeData t = new TimeData("NRMN", 2018, 10, 8, 15, new Measurement(4.0), 
-                new Measurement(5.0), new Measurement(6.0));
+                new Measurement(5.0), new Measurement(6.0), new Measurement(7.0));
         Assert.assertEquals(4.0, t.getTair().getValue(), 0.01);
         Assert.assertEquals(4.0, t.getMeasurement(ParamType.TAIR).getValue(), 0.01);
+    }
+    
+    /**
+     * Testing the wspd
+     * @throws WrongParameterIdException wrong param
+     */
+    @Test
+    public void testGetWspd() throws WrongParameterIdException
+    {
+        TimeData t = new TimeData("NRMN", 2018, 10, 8, 15, new Measurement(4.0), 
+                new Measurement(5.0), new Measurement(6.0), new Measurement(7.0));
+        Assert.assertEquals(7.0, t.getWspd().getValue(), 0.01);
+        Assert.assertEquals(7.0, t.getMeasurement(ParamType.WSPD).getValue(), 0.01);
     }
 
 }

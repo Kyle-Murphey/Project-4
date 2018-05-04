@@ -41,6 +41,7 @@ public class DayDataStatistics
         calculateStatistics(ParamType.TAIR);
         calculateStatistics(ParamType.TA9M);
         calculateStatistics(ParamType.SRAD);
+        calculateStatistics(ParamType.WSPD);
     }
     
     /**
@@ -237,8 +238,22 @@ public class DayDataStatistics
     {
         return paramStats.get(ParamType.TAIR).get(StatType.MIN);
     }
-
-
+    
+    /**
+     * @return max windspeed
+     */
+    public StatMeasurement getWindSpeedMax()
+    {
+        return paramStats.get(ParamType.WSPD).get(StatType.MAX);
+    }
+    
+    /**
+     * @return min windspeed
+     */
+    public StatMeasurement getWindSpeedMin()
+    {
+        return paramStats.get(ParamType.WSPD).get(StatType.MIN);
+    }
 
     /**
      * Describe DayStatistics
@@ -257,4 +272,5 @@ public class DayDataStatistics
                 getSolarRadiationAverage().getValue(), getSolarRadiationTotal().getValue());
        
     }
+
 }

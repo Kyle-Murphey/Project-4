@@ -13,5 +13,7 @@ public enum ParamType
     /** ta9m name **/
     TA9M,
     /** solar radiation name **/
-    SRAD
+    SRAD,
+    /** wind speed name **/
+    WSPD
 }

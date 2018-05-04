@@ -70,6 +70,14 @@ public class DaysStatisticsTest
                 "[SRAD MAX 447.0000 STIL 2018-01-02T18:50:00 UTC\n" + 
                 ", SRAD MAX 252.0000 OKCN 2018-01-02T18:45:00 UTC\n" + 
                 ", SRAD MAX 254.0000 OKCE 2018-01-02T18:55:00 UTC\n" + 
+                "]\n" + 
+                "[WSPD MIN 0.1000 STIL 2018-01-02T17:50:00 UTC\n" + 
+                ", WSPD MIN 0.3000 OKCN 2018-01-02T08:25:00 UTC\n" + 
+                ", WSPD MIN 0.2000 OKCE 2018-01-02T17:25:00 UTC\n" + 
+                "]\n" + 
+                "[WSPD MAX 5.0000 STIL 2018-01-02T03:05:00 UTC\n" + 
+                ", WSPD MAX 4.4000 OKCN 2018-01-02T18:55:00 UTC\n" + 
+                ", WSPD MAX 3.7000 OKCE 2018-01-02T19:20:00 UTC\n" + 
                 "]", d.toString());
     }
     
